@@ -1,0 +1,67 @@
+/*
+task hello << {        << is the same as doLast{...}
+    println 'hello, world'
+}
+
+
+also we can do this:
+
+task hello
+hello << {
+    print 'hello, '
+}
+hello << {
+    println 'world'
+}
+
+Каждый раз, когда Gradle запускает билд, процесс проходит через три фазы жизненного цикла:
+инициализация, конфигурация и выполнение.
+Выполнение — фаза, во время которой задачи билда выполняются в порядке, указанном в настройках их зависимостей.
+Конфигурация — фаза в которой объекты задачи собираются во внутреннюю объектную модель, обычно называемую направленным
+ациклическим графом.
+Инициализация — фаза, в которой Gradle принимает решение, какие объекты будут принимать участие в билде.
+Последняя фаза важна в многопроектных билдах.
+*/
+plugins {
+    id 'java'
+}
+
+task message{
+    doLast{
+        println 'Hello!'
+    }
+}
+
+task buildDocker(type: Exec) {
+    group = "docker"
+    description = "Build Docker image"
+    workingDir = file("${projectDir}/docker")
+
+    commandLine "docker", "build", "-t", "my-app", "."
+}
+
+task runDocker(type: Exec, dependsOn: buildDocker) {
+    group = "docker"
+    description = "Run Docker container"
+    workingDir = file("${projectDir}/docker")
+
+    commandLine "docker", "run", "-p", "8080:8080", "my-app"
+}
+task buildJar(type: Jar) {
+    group = "build"
+    description = "Builds a jar file"
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.App'
+        )
+    }
+
+    from sourceSets.main.output
+}
+task copyJar(type: Copy, dependsOn: buildJar) {
+    group = "build"
+    description = "Copies jar file to docker folder"
+    from buildJar.archivePath
+    into file("${projectDir}/docker")
+}
+build.dependsOn(copyJar)
