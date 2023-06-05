@@ -15,7 +15,6 @@ public class Singleton {
 }
 */
 
-
 // Simple Solution
 /*
 public class Singleton {

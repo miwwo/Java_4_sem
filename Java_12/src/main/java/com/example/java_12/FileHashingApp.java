@@ -16,8 +16,8 @@ import java.security.NoSuchAlgorithmException;
 
 @Component
 public class FileHashingApp implements CommandLineRunner {
-    private String inputFile = "C:\\Users\\gemmi\\IdeaProjects\\Java_12\\src\\main\\resources\\inputFile.txt";
-    private String outputFile = "C:\\Users\\gemmi\\IdeaProjects\\Java_12\\src\\main\\resources\\outputFile.txt";
+    private String inputFile = "C:\\main\\resources\\inputFile.txt";
+    private String outputFile = "C:\\main\\resources\\outputFile.txt";
 
     @Override
     public void run(String... args) throws Exception {
